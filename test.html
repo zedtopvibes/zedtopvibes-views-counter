@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Song Page</title>
+<style>
+  .views {
+    font-size: 14px;
+    color: #555;
+    margin-top: 8px;
+  }
+</style>
+</head>
+<body>
+
+<h1>Kaladoshas – Example Song</h1>
+
+<div class="views">
+  👁️ <span id="views">0</span> views
+</div>
+
+<script>
+  
+  const SLUG = "kaladoshas"; // unique song slug
+  const API = "https://view-counter.zedtopvibes.workers.dev";
+
+  // READ views
+  fetch(`${API}/views?slug=${SLUG}`)
+    .then(res => res.json())
+    .then(data => {
+      document.getElementById("views").textContent = data.views;
+    });
+
+  // INCREMENT view (fire & forget)
+  fetch(`${API}/count?slug=${SLUG}`);
+</script>
+
+</body>
+</html>
