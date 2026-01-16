@@ -3,8 +3,24 @@ export default {
     const url = new URL(request.url);
     const slug = url.searchParams.get("slug");
 
+    // CORS headers (allow all origins for testing)
+    const corsHeaders = {
+      "Access-Control-Allow-Origin": "*",
+      "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+      "Access-Control-Allow-Headers": "Content-Type",
+      "Content-Type": "application/json"
+    };
+
+    // Handle preflight request
+    if (request.method === "OPTIONS") {
+      return new Response(null, { headers: corsHeaders });
+    }
+
     if (!slug) {
-      return new Response("Missing slug", { status: 400 });
+      return new Response(JSON.stringify({ error: "Missing slug" }), {
+        status: 400,
+        headers: corsHeaders
+      });
     }
 
     // READ ONLY
@@ -14,10 +30,13 @@ export default {
         .bind(slug)
         .all();
 
-      return Response.json({
-        slug,
-        views: results.length ? results[0].count : 0
-      });
+      return new Response(
+        JSON.stringify({
+          slug,
+          views: results.length ? results[0].count : 0
+        }),
+        { headers: corsHeaders }
+      );
     }
 
     // INCREMENT VIEW
@@ -33,12 +52,18 @@ export default {
         .bind(slug)
         .first();
 
-      return Response.json({
-        slug,
-        views: result.count
-      });
+      return new Response(
+        JSON.stringify({
+          slug,
+          views: result.count
+        }),
+        { headers: corsHeaders }
+      );
     }
 
-    return new Response("Not found", { status: 404 });
+    return new Response(JSON.stringify({ error: "Not found" }), {
+      status: 404,
+      headers: corsHeaders
+    });
   }
 };
