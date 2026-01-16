@@ -1,0 +1,8 @@
+name = "view-counter-worker"
+main = "src/index.js"
+compatibility_date = "2025-01-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "view-counter-db"
+database_id = "404d74b6-98cb-484f-9281-a72748b5b3ce"
